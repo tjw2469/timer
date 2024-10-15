@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Timer with Sound Alert</title>
+<style>
+  body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+  .timer { font-size: 2em; margin: 20px; }
+  button { font-size: 1em; padding: 10px; margin: 5px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="timer" id="timer">05:00</div>
+<button id="startBtn">Start</button>
+<button id="resetBtn">Reset</button>
+<audio id="alarmSound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"></audio>
+<script>
+  var initialTime = 5 * 60; // 5 minutes
+  var currentTime = initialTime;
+  var interval;
+  var timerDisplay = document.getElementById('timer');
+  var alarmSound = document.getElementById('alarmSound');
+
+  function formatTime(seconds) {
+    var minutes = parseInt(seconds / 60, 10);
+    var seconds = parseInt(seconds % 60, 10);
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    return minutes + ':' + seconds;
+  }
+
+  function startTimer() {
+    if (!interval) {
+      interval = setInterval(function() {
+        currentTime -= 1;
+        timerDisplay.textContent = formatTime(currentTime);
+        if (currentTime <= 0) {
+          clearInterval(interval);
+          interval = null;
+          alarmSound.play();
+        }
+      }, 1000);
+    }
+  }
+
+  function resetTimer() {
+    clearInterval(interval);
+    interval = null;
+    currentTime = initialTime;
+    timerDisplay.textContent = formatTime(currentTime);
+  }
+
+  document.getElementById('startBtn').addEventListener('click', startTimer);
+  document.getElementById('resetBtn').addEventListener('click', resetTimer);
+</script>
+</body>
+</html>
